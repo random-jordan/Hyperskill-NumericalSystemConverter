@@ -1,17 +1,6 @@
 type: edu
 custom_name: stage6
 files:
-- name: src/converter/Main.java
-  visible: true
-  text: |
-    package converter;
-
-    public class Main {
-        public static void main(String[] args) {
-            System.out.println("Hello, world!");
-        }
-    }
-  learner_created: false
 - name: test/ConverterTest.java
   visible: false
   text: |
@@ -194,6 +183,21 @@ files:
         }
     }
   learner_created: false
+- name: src/converter/Main.java
+  visible: true
+  text: |
+    package converter;
+
+    public class Main {
+        public static void main(String[] args) {
+            System.out.println("Hello, world!");
+        }
+    }
+  learner_created: false
 feedback_link: https://hyperskill.org/projects/41/stages/219/implement
-status: Unchecked
+status: Solved
+feedback:
+  message: Congratulations! Continue on <a href="https://hyperskill.org/projects/41/stages/219/implement">JetBrains
+    Academy</a>
+  time: Sun, 20 Sep 2020 05:47:35 UTC
 record: -1

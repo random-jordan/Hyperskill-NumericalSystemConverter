@@ -7,9 +7,20 @@ public class Main {
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        int sourceRadix = scanner.nextInt();
-        String oldNum = scanner.next();
-        int newBase = scanner.nextInt();
+        int sourceRadix;
+        String oldNum;
+        int newBase;
+        try {
+            sourceRadix = scanner.nextInt();
+            oldNum = scanner.next();
+            newBase = scanner.nextInt();
+            if (newBase < 1 || newBase > 36 || sourceRadix < 1 || sourceRadix > 36) {
+                throw new Exception("E");
+            }
+        } catch (Exception e) {
+            System.out.println("input error");
+            return;
+        }
 
         double decimal = parse(oldNum, sourceRadix);
         String newType = convert(decimal, newBase);
