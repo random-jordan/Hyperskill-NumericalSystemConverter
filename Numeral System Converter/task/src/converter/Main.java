@@ -8,41 +8,93 @@ public class Main {
 
     public static void main(String[] args) {
         int sourceRadix = scanner.nextInt();
-        int num = parse(scanner.next(), sourceRadix);
+        String oldNum = scanner.next();
         int newBase = scanner.nextInt();
 
-        System.out.println(convert(num, newBase));
+        double decimal = parse(oldNum, sourceRadix);
+        String newType = convert(decimal, newBase);
+
+        System.out.println(newType);
     }
-    private static int parse(String num, int base) {
-        int value = 0;
+    private static double parse(String num, int base) {
+        String[] split = num.split("[.,]");
+        String integerPart = split[0];
+        String floatPart = split.length == 2 ? split[1] : "";
+        double value = 0;
+
         if (base == 1) {
-            for (int i = 0; i < num.length(); i++) {
-                value = num.charAt(i) == '1' ? value + 1 : value;
+            for (int i = 0; i < integerPart.length(); i++) {
+                value = integerPart.charAt(i) == '1' ? value + 1 : value;
+            }
+            for (int i = 0; i < floatPart.length(); i++) {
+                value = floatPart.charAt(i) == '1' ? value + 0.1 : value;
             }
         } else {
-            value = Integer.parseInt(num, base);
+            for (int i = 0; i < integerPart.length(); i++) {
+                int temp = integerPart.charAt(i);
+                double pow = Math.pow(base, integerPart.length() - i - 1);
+                if (temp < 58) {
+                    value += (temp - 48) * pow;
+                } else {
+                    value += (temp - 87) * pow;
+                }
+            }
+            for (int i = 0; i < floatPart.length(); i++) {
+                int temp = floatPart.charAt(i);
+                double pow = Math.pow(base, -1 - i);
+                if (temp < 58) {
+                    value += (temp - 48) * pow;
+                } else {
+                    value += (temp - 87) * pow;
+                }
+            }
         }
 
         return value;
     }
-    private static String convert(int num, int newBase) {
+    private static String convert(double num, int newBase) {
         StringBuilder srt = new StringBuilder();
-        if (newBase == 36) {
-            while (num > 0) {
-                int part = num % 36;
-                if (part < 11) {
+        int integerPart = (int) num;
+        if (integerPart == 0) {
+            srt.append("0");
+        }
+        double floatPart = num - integerPart;
+
+        if (newBase == 1) {
+            for (;integerPart > 0; integerPart--) {
+                srt.append("1");
+            }
+            if (floatPart > 0) {
+                srt.append(".");
+                for (; floatPart > 0; floatPart -= 0.1) {
+                    srt.append("1");
+                }
+            }
+        } else {
+            // 0,1,2,...,10,a,b,c,..
+            while (integerPart > 0) {
+                int part = integerPart % newBase;
+                if (part < 10) {
                     srt.insert(0, (char) (part + 48));
                 } else {
                     srt.insert(0, (char) (part + 87));
                 }
-                num = num / 36;
+                integerPart = integerPart / newBase;
             }
-        } else if (newBase == 1) {
-            for (;num > 0; num--) {
-                srt.append("1");
+            if (floatPart > 0) {
+                srt.append(".");
+                for (int iteration = 0; floatPart > 0 && iteration < 5; iteration++) {
+                    double mul = newBase * floatPart;
+                    long part = (long) mul;
+
+                    if (part < 10) {
+                        srt.append((char) (part + 48));
+                    } else {
+                        srt.append((char) (part + 87));
+                    }
+                    floatPart = mul - part;
+                }
             }
-        } else {
-            return Integer.toString(num, newBase);
         }
         return srt.toString();
     }
